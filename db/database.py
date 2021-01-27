@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.orm import sessionmaker, Session, Query
 
 from db.exceptions import DBIntegrityException, DBDataException
-from db.models import BaseModel
+from db.models import BaseModel, DBUser
 
 
 class DBSession:
@@ -38,6 +38,15 @@ class DBSession:
 
         if need_close:
             self.close_session()
+
+    def users(self) -> Query:
+        return self.query(DBUser)
+
+    def get_user_by_login(self, login: str) -> DBUser:
+        return self.users().filter(DBUser.login == login).first()
+
+    def get_user_by_id(self, uid: int) -> DBUser:
+        return self.users().filter(DBUser.id == id).first()
 
 
 class DataBase:

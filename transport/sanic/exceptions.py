@@ -5,7 +5,7 @@ class SanicRequestValidationException(SanicException):
     status_code = 400
 
 
-class SanicEmployeeConflictException(SanicException):
+class SanicUserConflictException(SanicException):
     status_code = 409
 
 
@@ -25,5 +25,5 @@ class SanicAuthException(SanicException):
     status_code = 401
 
 
-class SanicEmployeeNotFound(SanicException):
+class SanicUserNotFound(SanicException):
     status_code = 404

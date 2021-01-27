@@ -13,7 +13,10 @@ def get_routes(config: ApplicationConfig, context: Context) -> Tuple:
         endpoints.CreateUserEndpoint(
             config=config, context=context, uri='/user', methods=('POST',),
         ),
-        endpoints.AuthUserEndpoint(
+    )
+
+
+"""        endpoints.AuthUserEndpoint(
             config=config, context=context, uri='/auth', methods=('POST',),
         ),
         endpoints.UserEndpoint(
@@ -25,5 +28,4 @@ def get_routes(config: ApplicationConfig, context: Context) -> Tuple:
         endpoints.IdentifiedMessageEndpoint(
             config=config, context=context, uri='/msg/<uid:int>', methods=('GET', 'DELETE', "PATCH")
         ),
-
-    )
+"""
