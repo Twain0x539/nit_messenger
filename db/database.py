@@ -46,7 +46,10 @@ class DBSession:
         return self.users().filter(DBUser.login == login).first()
 
     def get_user_by_id(self, uid: int) -> DBUser:
-        return self.users().filter(DBUser.id == id).first()
+        try:
+            return self.users().get(uid)
+        except AttributeError:
+            raise DBDataException
 
 
 class DataBase:
