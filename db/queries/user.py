@@ -16,7 +16,7 @@ def create_user(session: DBSession, user: RequestCreateUserDto, hashed_password:
         first_name=user.first_name,
         last_name=user.last_name,
         created_at = datetime.now(),
-        update_at = None,
+        updated_at = None,
     )
     if session.get_user_by_login(new_user.login) is not None:
         raise DBUserExistsException
@@ -43,5 +43,6 @@ def patch_user(session: DBSession, user: RequestPatchUserDto, uid: int) -> DBUse
         if hasattr(user, attr):
             value = getattr(user, attr)
             setattr(db_user, attr, value)
+    db_user.updated_at = datetime.now()
 
     return db_user
