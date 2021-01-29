@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.orm import sessionmaker, Session, Query
 
 from db.exceptions import DBIntegrityException, DBDataException
-from db.models import BaseModel, DBUser
+from db.models import BaseModel, DBUser, DBMessage
 
 
 class DBSession:
@@ -42,6 +42,9 @@ class DBSession:
     def users(self) -> Query:
         return self.query(DBUser)
 
+    def messages(self) -> Query:
+        return self.query(DBMessage)
+
     def get_user_by_login(self, login: str) -> DBUser:
         return self.users().filter(DBUser.login == login).first()
 
@@ -50,6 +53,9 @@ class DBSession:
             return self.users().get(uid)
         except AttributeError:
             raise DBDataException
+
+    def get_user_messages(self, uid:int):
+        return self.messages().filter(DBMessage.recipient_id == uid)
 
 
 class DataBase:

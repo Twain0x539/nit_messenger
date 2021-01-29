@@ -19,11 +19,11 @@ def get_routes(config: ApplicationConfig, context: Context) -> Tuple:
         endpoints.UserEndpoint(
             config=config, context=context, uri='/user/<uid:int>', methods=('GET', 'PATCH'), auth_required=True,
         ),
+        endpoints.MessageEndpoint(
+            config=config, context=context, uri='/msg', methods=('GET', 'POST'), auth_required=True,
+        ),
     )
 """
-        endpoints.MessageEndpoint(
-            config=config, context=context, uri='/msg', methods=('GET', 'POST'),
-        ),
         endpoints.IdentifiedMessageEndpoint(
             config=config, context=context, uri='/msg/<uid:int>', methods=('GET', 'DELETE', "PATCH")
         ),

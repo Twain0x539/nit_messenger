@@ -11,4 +11,4 @@ class DBMessage(BaseModel):
     sender_id = Column(INT(), nullable=False)
     recipient_id = Column(INT(), nullable=False)
     created_at = Column(VARCHAR(50), nullable=False)
-    updated_at = Column(VARCHAR(50))
+    updated_at = Column(VARCHAR(50), nullable=True)

@@ -1,6 +1,8 @@
 from .base import BaseEndpoint
 from .health import HealthEndpoint
 
-from .user.create import CreateUserEndpoint
-from .user.auth import AuthUserEndpoint
-from .user.user import UserEndpoint
+from .user import CreateUserEndpoint
+from .user import AuthUserEndpoint
+from .user import UserEndpoint
+
+from .message import MessageEndpoint
