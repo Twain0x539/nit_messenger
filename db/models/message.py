@@ -1,4 +1,4 @@
-from sqlalchemy import Column, INT, VARCHAR
+from sqlalchemy import Column, INT, VARCHAR, BOOLEAN
 
 from db.models import BaseModel
 
@@ -12,3 +12,4 @@ class DBMessage(BaseModel):
     recipient_id = Column(INT(), nullable=False)
     created_at = Column(VARCHAR(50), nullable=False)
     updated_at = Column(VARCHAR(50), nullable=True)
+    is_deleted = Column(BOOLEAN(), nullable=False)

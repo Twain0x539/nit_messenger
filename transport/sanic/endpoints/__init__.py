@@ -6,3 +6,4 @@ from .user import AuthUserEndpoint
 from .user import UserEndpoint
 
 from .message import MessageEndpoint
+from .message import IdentifiedMessageEndpoint

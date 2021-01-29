@@ -54,8 +54,11 @@ class DBSession:
         except AttributeError:
             raise DBDataException
 
-    def get_user_messages(self, uid:int):
+    def get_user_messages(self, uid: int):
         return self.messages().filter(DBMessage.recipient_id == uid)
+
+    def get_message_by_id(self, msgid: int):
+        return self.messages().get(msgid)
 
 
 class DataBase:
