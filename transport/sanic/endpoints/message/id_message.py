@@ -1,5 +1,6 @@
 from sanic.request import Request
 
+from api.request.message import RequestPatchMessageDto
 from api.response.message import ResponseGetMessageInfoDto
 
 from transport.sanic.endpoints import BaseEndpoint
@@ -35,7 +36,15 @@ class IdentifiedMessageEndpoint(BaseEndpoint):
 
         response = {}
 
-        return await self.make_response_json(status=200, body=response.dump())
+        return await self.make_response_json(status=201)
 
-    async def method_patch(self):
-        pass
+    async def method_patch(
+            self, request: Request, body: dict, session: DBSession, msgid: int, token: dict, *args, **kwargs
+    ):
+        request_model = RequestPatchMessageDto
+
+        patched_message = message_queries.patch_message(session, msgid, token['uid'])
+
+        response_model = ResponseGetMessageInfoDto(patched_message)
+
+        return self.make_response_json(status=201, body= response_model.dump())

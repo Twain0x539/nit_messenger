@@ -5,10 +5,10 @@ from db.models.message import DBMessage
 from db.queries import user as user_queries
 from db.exceptions import DBNotYourMessageException, DBMessageNotExistsException, DBMessageDeletedException
 
-from api.request.message import RequestCreateMessageDto
+from api.request.message import RequestCreateMessageDto, RequestPatchMessageDto
 
 
-def create_message(session: DBSession, message: RequestCreateMessageDto, *, sender_id: int,):
+def create_message(session: DBSession, message: RequestCreateMessageDto, *, sender_id: int):
 
     new_message = DBMessage(
         message=message.message,
@@ -22,6 +22,17 @@ def create_message(session: DBSession, message: RequestCreateMessageDto, *, send
     session.add_model(new_message)
 
     return new_message
+
+
+def patch_message(session: DBSession, message: RequestPatchMessageDto, msgid: int, sender_id: int,):
+    db_message = session.get_message_by_id(msgid)
+    if message is None:
+        raise DBMessageNotExistsException
+    if db_message.sender_id != sender_id:
+        raise DBNotYourMessageException
+    else:
+        message.message = message
+        return db_message
 
 
 def get_user_messages(session: DBSession, uid: int):
