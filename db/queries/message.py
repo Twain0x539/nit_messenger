@@ -3,7 +3,7 @@ from datetime import datetime
 from db.database import DBSession
 from db.models.message import DBMessage
 from db.queries import user as user_queries
-from db.exceptions import DBNotYourMessageException, DBMessageNotExistsException
+from db.exceptions import DBNotYourMessageException, DBMessageNotExistsException, DBMessageDeletedException
 
 from api.request.message import RequestCreateMessageDto
 
@@ -32,7 +32,22 @@ def get_message_by_id(session: DBSession, msgid: int, uid: int):
     message = session.get_message_by_id(msgid)
     if message is None:
         raise DBMessageNotExistsException
+    if message.is_deleted:
+        raise DBMessageDeletedException
     if message.recipient_id == uid or message.sender_id == uid:
-        return session.get_message_by_id(msgid)
+        return message
+    else:
+        raise DBNotYourMessageException("You don't have access to this message")
+
+
+def delete_message_by_id(session: DBSession, msgid: int, uid: int):
+    message = session.get_message_by_id(msgid)
+    if message is None:
+        raise DBMessageNotExistsException
+    if message.is_deleted:
+        raise DBMessageDeletedException
+    if message.sender_id == uid:
+        message.is_deleted = True
+        return message
     else:
         raise DBNotYourMessageException("You don't have access to this message")
