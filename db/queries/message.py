@@ -24,7 +24,7 @@ def create_message(session: DBSession, message: RequestCreateMessageDto, *, send
     return new_message
 
 
-def patch_message(session: DBSession, message: RequestPatchMessageDto, msgid: int, sender_id: int,):
+def patch_message(session: DBSession, message: RequestPatchMessageDto, msgid: int, sender_id: int,) -> DBMessage:
     db_message = session.get_message_by_id(msgid)
     if message is None:
         raise DBMessageNotExistsException
@@ -39,7 +39,7 @@ def get_user_messages(session: DBSession, uid: int):
     return session.get_user_messages(uid)
 
 
-def get_message_by_id(session: DBSession, msgid: int, uid: int):
+def get_message_by_id(session: DBSession, msgid: int, uid: int) -> DBMessage:
     message = session.get_message_by_id(msgid)
     if message is None:
         raise DBMessageNotExistsException

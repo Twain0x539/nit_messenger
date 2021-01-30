@@ -16,9 +16,12 @@ from helpers.password.hash import check_hash
 from helpers.password.exception import CheckPasswordHashException
 from helpers.auth.token import create_token
 
+
 class AuthUserEndpoint(BaseEndpoint):
 
-    async def method_post(self, request: Request, body: dict, session: DBSession, *args, **kwargs):
+    async def method_post(
+            self, request: Request, body: dict, session: DBSession, *args, **kwargs
+    ) -> BaseHTTPResponse:
         request_model = RequestAuthUserDto(body)
 
         try:

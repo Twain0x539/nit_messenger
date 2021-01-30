@@ -1,4 +1,3 @@
-
 from sanic.request import Request
 from sanic.response import BaseHTTPResponse
 
@@ -13,10 +12,11 @@ from api.response.user import ResponseGetUserDto
 from api.request.user import RequestPatchUserDto
 
 
-
 class UserEndpoint(BaseEndpoint):
 
-    async def method_get(self, request: Request, body: dict, session: DBSession, uid: int, token: dict, *args, **kwargs) -> BaseHTTPResponse:
+    async def method_get(
+            self, request: Request, body: dict, session: DBSession, uid: int, token: dict, *args, **kwargs
+    ) -> BaseHTTPResponse:
         try:
             requested_user = token['uid']
         except KeyError:
@@ -30,7 +30,9 @@ class UserEndpoint(BaseEndpoint):
             return await self.make_response_json(status=403, message="Insufficient permission")
 
 
-    async def method_patch(self, request: Request, body: dict, session: DBSession, uid: int, token: dict, *args, **kwargs) -> BaseHTTPResponse:
+    async def method_patch(
+            self, request: Request, body: dict, session: DBSession, uid: int, token: dict, *args, **kwargs
+    ) -> BaseHTTPResponse:
 
 
         try:

@@ -1,4 +1,5 @@
 from sanic.request import Request
+from sanic.response import BaseHTTPResponse
 
 from api.request.message import RequestPatchMessageDto
 from api.response.message import ResponseGetMessageInfoDto
@@ -10,11 +11,12 @@ from db.database import DBSession
 from db.queries import message as message_queries
 from db.exceptions import DBNotYourMessageException, DBMessageNotExistsException, DBMessageDeletedException
 
+
 class IdentifiedMessageEndpoint(BaseEndpoint):
 
     async def method_get(
             self, request: Request, body: dict, session: DBSession, msgid: int, token: dict, *args, **kwargs
-    ):
+    ) -> BaseHTTPResponse:
         try:
             db_message = message_queries.get_message_by_id(session, msgid, token['uid'])
         except (DBNotYourMessageException, DBMessageNotExistsException):
@@ -28,7 +30,7 @@ class IdentifiedMessageEndpoint(BaseEndpoint):
 
     async def method_delete(
             self, request: Request, body: dict, session: DBSession, msgid: int, token: dict, *args, **kwargs
-    ):
+    ) -> BaseHTTPResponse:
         try:
             db_message = message_queries.get_message_by_id(session, msgid, token['uid'])
         except (DBNotYourMessageException, DBMessageNotExistsException) as e:
@@ -40,7 +42,7 @@ class IdentifiedMessageEndpoint(BaseEndpoint):
 
     async def method_patch(
             self, request: Request, body: dict, session: DBSession, msgid: int, token: dict, *args, **kwargs
-    ):
+    ) -> BaseHTTPResponse:
         request_model = RequestPatchMessageDto
 
         patched_message = message_queries.patch_message(session, msgid, token['uid'])

@@ -1,4 +1,5 @@
 from sanic.request import Request
+from sanic.response import BaseHTTPResponse
 
 from transport.sanic.endpoints import BaseEndpoint
 from transport.sanic.exceptions import SanicDBException
@@ -13,8 +14,9 @@ from api.response.message import ResponseGetMessageInfoDto
 
 class MessageEndpoint(BaseEndpoint):
 
-
-    async def method_get(self, request: Request, body: dict, session: DBSession, token: dict, *args, **kwargs):
+    async def method_get(
+            self, request: Request, body: dict, session: DBSession, token: dict, *args, **kwargs
+    ) -> BaseHTTPResponse:
 
         db_messages = message_queries.get_user_messages(session, uid=token['uid'])
 
@@ -22,7 +24,9 @@ class MessageEndpoint(BaseEndpoint):
 
         return await self.make_response_json(status=200, body=response_model.dump())
 
-    async def method_post(self, request: Request, body: dict, session: DBSession, token: dict, *args, **kwargs):
+    async def method_post(
+            self, request: Request, body: dict, session: DBSession, token: dict, *args, **kwargs
+    ) -> BaseHTTPResponse:
         request_model = RequestCreateMessageDto(body)
 
         db_new_msg = message_queries.create_message(session, message=request_model, sender_id=token['uid'])

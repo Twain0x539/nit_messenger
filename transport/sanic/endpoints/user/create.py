@@ -18,7 +18,9 @@ from helpers.password.exception import GeneratePasswordHashException
 
 class CreateUserEndpoint(BaseEndpoint):
 
-    async def method_post(self, request: Request, body: dict, session: DBSession, *args, **kwargs) -> BaseHTTPResponse:
+    async def method_post(
+            self, request: Request, body: dict, session: DBSession, *args, **kwargs
+    ) -> BaseHTTPResponse:
         request_model = RequestCreateUserDto(body)
 
         try:
