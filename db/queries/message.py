@@ -44,7 +44,7 @@ def get_user_messages(session: DBSession, *, uid: int):
 
 def get_message_by_id(session: DBSession, *, msgid: int, uid: int) -> DBMessage:
     db_message = session.get_message_by_id(msgid)
-    if (db_message.sender_id != uid and db_message.recipient_id != uid) or db_message is None:
+    if db_message is None or (db_message.sender_id != uid and db_message.recipient_id != uid):
         raise DBNotYourMessageException("You don't have access to this message")
 
     if db_message.is_deleted:

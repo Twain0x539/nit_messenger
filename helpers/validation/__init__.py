@@ -1,1 +1,2 @@
-from .validator import Validator
+from .base import Validator
+from .validators import LoginValidator, PasswordValidator, NameValidator

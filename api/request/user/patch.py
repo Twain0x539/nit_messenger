@@ -2,9 +2,11 @@ from marshmallow import Schema, fields
 
 from api.base import RequestDto
 
+from helpers.validation import NameValidator
+
 class RequestPatchUserDtoSchema(Schema):
-    first_name = fields.Str()
-    last_name = fields.Str()
+    first_name = fields.Str(validate=NameValidator.params())
+    last_name = fields.Str(validate=NameValidator.params())
 
 class RequestPatchUserDto(RequestDto,RequestPatchUserDtoSchema):
     fields: list
