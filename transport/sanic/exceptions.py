@@ -36,5 +36,10 @@ class SanicCantGetUidFromToken(SanicException):
 class SanicUserDontHaveAccessToMessage(SanicException):
     status_code = 403
 
-class SanicMessageDeletedException():
+
+class SanicMessageDeletedException(SanicException):
     status_code = 403
+
+
+class SanicMessageAlreadyDeletedException(SanicException):
+    status_code = 409

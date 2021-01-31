@@ -14,6 +14,7 @@ from api.response.message import ResponseGetMessageInfoDto
 
 class MessageEndpoint(BaseEndpoint):
 
+
     async def method_get(
             self, request: Request, body: dict, session: DBSession, token: dict, *args, **kwargs
     ) -> BaseHTTPResponse:
@@ -23,6 +24,7 @@ class MessageEndpoint(BaseEndpoint):
         response_model = ResponseGetMessageInfoDto(db_messages, many=True)
 
         return await self.make_response_json(status=200, body=response_model.dump())
+
 
     async def method_post(
             self, request: Request, body: dict, session: DBSession, token: dict, *args, **kwargs
@@ -38,7 +40,7 @@ class MessageEndpoint(BaseEndpoint):
 
         response_model = ResponseGetMessageInfoDto(db_new_msg)
 
-        return await self.make_response_json(body=response_model.dump(), status=201)
+        return await self.make_response_json(status=201, body=response_model.dump())
 
 
 
