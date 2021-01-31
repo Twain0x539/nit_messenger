@@ -24,41 +24,47 @@ def create_message(session: DBSession, message: RequestCreateMessageDto, *, send
     return new_message
 
 
-def patch_message(session: DBSession, message: RequestPatchMessageDto, msgid: int, sender_id: int,) -> DBMessage:
+def patch_message(session: DBSession, message: RequestPatchMessageDto, *, msgid: int, uid: int) -> DBMessage:
     db_message = session.get_message_by_id(msgid)
-    if message is None:
-        raise DBMessageNotExistsException
-    if db_message.sender_id != sender_id:
-        raise DBNotYourMessageException
-    else:
-        message.message = message
-        return db_message
+
+    if db_message is None or db_message.sender_id != uid:
+        raise DBNotYourMessageException("You don't have access to this message")
+
+    if db_message.is_deleted:
+        raise DBMessageDeletedException
+
+    db_message.message = message.message
+    db_message.updated_at = datetime.now()
+    return db_message
 
 
-def get_user_messages(session: DBSession, uid: int):
+def get_user_messages(session: DBSession, *, uid: int):
     return session.get_user_messages(uid)
 
 
-def get_message_by_id(session: DBSession, msgid: int, uid: int) -> DBMessage:
-    message = session.get_message_by_id(msgid)
-    if message is None:
-        raise DBMessageNotExistsException
-    if message.is_deleted:
-        raise DBMessageDeletedException
-    if message.recipient_id == uid or message.sender_id == uid:
-        return message
-    else:
+def get_message_by_id(session: DBSession, *, msgid: int, uid: int) -> DBMessage:
+    db_message = session.get_message_by_id(msgid)
+    if (db_message.sender_id != uid and db_message.recipient_id != uid) or db_message is None:
         raise DBNotYourMessageException("You don't have access to this message")
 
-
-def delete_message_by_id(session: DBSession, msgid: int, uid: int):
-    message = session.get_message_by_id(msgid)
-    if message is None:
-        raise DBMessageNotExistsException
-    if message.is_deleted:
+    if db_message.is_deleted:
         raise DBMessageDeletedException
-    if message.sender_id == uid:
-        message.is_deleted = True
-        return message
-    else:
+
+    return db_message
+
+
+def delete_message(session: DBSession, *, msgid: int, uid: int):
+
+    db_message = session.get_message_by_id(msgid)
+
+    if db_message is None or db_message.sender_id != uid:
         raise DBNotYourMessageException("You don't have access to this message")
+
+    if db_message.is_deleted:
+        raise DBMessageDeletedException
+    print(db_message.is_deleted)
+    db_message.is_deleted = 1
+    print(db_message.is_deleted)
+    db_message.updated_at = datetime.now()
+
+    return db_message

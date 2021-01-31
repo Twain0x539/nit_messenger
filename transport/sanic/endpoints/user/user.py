@@ -22,18 +22,16 @@ class UserEndpoint(BaseEndpoint):
         except KeyError:
             return await self.make_response_json(status=400, message="Can't get uid from token")
 
-        if (uid == requested_user):
+        if uid == requested_user:
             db_user = user_queries.get_user(session=session, uid=uid)
             response_model = ResponseGetUserDto(db_user)
             return await self.make_response_json(status=200, body=response_model.dump())
         else:
             return await self.make_response_json(status=403, message="Insufficient permission")
 
-
     async def method_patch(
             self, request: Request, body: dict, session: DBSession, uid: int, token: dict, *args, **kwargs
     ) -> BaseHTTPResponse:
-
 
         try:
             requested_user = token['uid']
@@ -41,17 +39,16 @@ class UserEndpoint(BaseEndpoint):
             return await self.make_response_json(status=400, message="Can't get uid from token")
 
         request_model = RequestPatchUserDto(body)
-        if (uid == requested_user):
+        if uid == requested_user:
             try:
-                db_user = user_queries.patch_user(session, request_model, uid)
+                db_user = user_queries.patch_user(session, request_model, uid=uid)
             except DBUserNotExistsException:
                 raise SanicUserNotFound('User not found')
-                return await self.make_response_json(status=400, message="User not found")
 
-            try:
-                session.commit_session()
-            except (DBDataException, DBIntegrityException) as e:
-                raise SanicDBException(str(e))
+        try:
+            session.commit_session()
+        except (DBDataException, DBIntegrityException) as e:
+            raise SanicDBException(str(e))
 
         response_model = ResponseGetUserDto(db_user)
         return await self.make_response_json(status=200, body=response_model.dump())

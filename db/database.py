@@ -58,7 +58,10 @@ class DBSession:
         return self.messages().filter(DBMessage.recipient_id == uid)
 
     def get_message_by_id(self, msgid: int):
-        return self.messages().get(msgid)
+        try:
+            return self.messages().get(msgid)
+        except AttributeError:
+            raise DBDataException
 
 
 class DataBase:
