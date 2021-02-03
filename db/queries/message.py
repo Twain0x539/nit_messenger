@@ -62,9 +62,7 @@ def delete_message(session: DBSession, *, msgid: int, uid: int) -> DBMessage:
 
     if db_message.is_deleted:
         raise DBMessageDeletedException
-    print(db_message.is_deleted)
     db_message.is_deleted = 1
-    print(db_message.is_deleted)
     db_message.updated_at = datetime.now()
 
     return db_message
