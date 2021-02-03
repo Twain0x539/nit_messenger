@@ -15,7 +15,6 @@ from helpers.password.hash import generate_hash
 from helpers.password.exception import GeneratePasswordHashException
 
 
-
 class CreateUserEndpoint(BaseEndpoint):
 
     async def method_post(

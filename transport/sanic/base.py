@@ -80,12 +80,6 @@ class SanicEndpoint:
     async def handler(self, request: Request, *args, **kwargs) -> BaseHTTPResponse:
         body = {}
 
-        # if self.auth_required:
-        #     try:
-        #         body.update(self.import_body_auth(request))
-        #     except SanicAuthException as e:
-        #         return await self.make_response_json(status=e.status_code)
-
         body.update(self.import_body_json(request))
         body.update(self.import_body_headers(request))
 

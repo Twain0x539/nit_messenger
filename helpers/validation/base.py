@@ -1,11 +1,13 @@
 from marshmallow import validate
 
 
-class Validator():
+class Validator:
     regexp: str
     length: int
     match_error: str
 
     @classmethod
-    def params(self):
-        return (validate.Regexp(self.regexp, error=self.match_error), validate.Length(self.length))
+    def params(cls):
+        return (validate.Regexp(cls.regexp, error=cls.match_error), validate.Length(cls.length))
+
+

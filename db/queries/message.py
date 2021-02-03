@@ -8,7 +8,7 @@ from db.exceptions import DBNotYourMessageException, DBMessageNotExistsException
 from api.request.message import RequestCreateMessageDto, RequestPatchMessageDto
 
 
-def create_message(session: DBSession, message: RequestCreateMessageDto, *, sender_id: int):
+def create_message(session: DBSession, message: RequestCreateMessageDto, *, sender_id: int) -> DBMessage:
 
     new_message = DBMessage(
         message=message.message,
@@ -38,7 +38,7 @@ def patch_message(session: DBSession, message: RequestPatchMessageDto, *, msgid:
     return db_message
 
 
-def get_user_messages(session: DBSession, *, uid: int):
+def get_user_messages(session: DBSession, *, uid: int) -> tuple[DBMessage]:
     return session.get_user_messages(uid)
 
 
@@ -53,7 +53,7 @@ def get_message_by_id(session: DBSession, *, msgid: int, uid: int) -> DBMessage:
     return db_message
 
 
-def delete_message(session: DBSession, *, msgid: int, uid: int):
+def delete_message(session: DBSession, *, msgid: int, uid: int) -> DBMessage:
 
     db_message = session.get_message_by_id(msgid)
 

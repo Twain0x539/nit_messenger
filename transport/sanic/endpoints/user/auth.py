@@ -2,12 +2,12 @@ from sanic.request import Request
 from sanic.response import BaseHTTPResponse
 
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicPasswordHashException, SanicUserConflictException, SanicDBException
+from transport.sanic.exceptions import SanicPasswordHashException, SanicDBException
 from transport.sanic.exceptions import SanicUserNotFound
 
 from db.database import DBSession
 from db.queries import user as user_queries
-from db.exceptions import DBUserExistsException, DBDataException, DBIntegrityException, DBUserNotExistsException
+from db.exceptions import DBDataException, DBIntegrityException, DBUserNotExistsException
 
 from api.request.user.auth import RequestAuthUserDto
 from api.response.user.auth import ResponseAuthUserDto, AuthResponseObject
@@ -28,6 +28,8 @@ class AuthUserEndpoint(BaseEndpoint):
             db_user = user_queries.get_user(session, login=request_model.login)
         except DBUserNotExistsException:
             raise SanicUserNotFound('User not found')
+        except (DBDataException, DBIntegrityException):
+            raise SanicDBException('Database error')
 
         try:
             check_hash(request_model.password, db_user.password)

@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from sanic.request import Request
 from sanic.response import BaseHTTPResponse
 
@@ -33,7 +31,6 @@ class IdentifiedMessageEndpoint(BaseEndpoint):
         return await self.make_response_json(status=200, body=response_model.dump())
 
 
-
     async def method_delete(
             self, request: Request, body: dict, session: DBSession, msgid: int, token: dict, *args, **kwargs
     ) -> BaseHTTPResponse:
@@ -55,6 +52,7 @@ class IdentifiedMessageEndpoint(BaseEndpoint):
             raise SanicDBException(str(e))
 
         return await self.make_response_json(status=201, body={})
+
 
     async def method_patch(
             self, request: Request, body: dict, session: DBSession, msgid: int, token: dict, *args, **kwargs

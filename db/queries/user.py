@@ -15,8 +15,8 @@ def create_user(session: DBSession, user: RequestCreateUserDto, hashed_password:
         password=hashed_password,
         first_name=user.first_name,
         last_name=user.last_name,
-        created_at = datetime.now(),
-        updated_at = None,
+        created_at=datetime.now(),
+        updated_at=None,
     )
     if session.get_user_by_login(new_user.login) is not None:
         raise DBUserExistsException
