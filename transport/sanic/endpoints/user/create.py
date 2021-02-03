@@ -27,7 +27,6 @@ class CreateUserEndpoint(BaseEndpoint):
         except GeneratePasswordHashException as e:
             raise SanicPasswordHashException(str(e))
 
-
         try:
             db_new_user = user_queries.create_user(session, request_model, hashed_password)
         except DBUserExistsException:

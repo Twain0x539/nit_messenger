@@ -2,7 +2,7 @@ from sanic.request import Request
 from sanic.response import BaseHTTPResponse
 
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicDBException
+from transport.sanic.exceptions import SanicDBException, SanicCantGetUidFromTokenException
 
 from db.database import DBSession
 from db.queries import message as message_queries
@@ -18,6 +18,10 @@ class MessageEndpoint(BaseEndpoint):
     async def method_get(
             self, request: Request, body: dict, session: DBSession, token: dict, *args, **kwargs
     ) -> BaseHTTPResponse:
+        try:
+            uid = token['uid']
+        except KeyError:
+            raise SanicCantGetUidFromTokenException("Can't get uid from token")
 
         db_messages = message_queries.get_user_messages(session, uid=token['uid'])
 
@@ -29,9 +33,15 @@ class MessageEndpoint(BaseEndpoint):
     async def method_post(
             self, request: Request, body: dict, session: DBSession, token: dict, *args, **kwargs
     ) -> BaseHTTPResponse:
+
         request_model = RequestCreateMessageDto(body)
 
-        db_new_msg = message_queries.create_message(session, message=request_model, sender_id=token['uid'])
+        try:
+            uid = token['uid']
+        except KeyError:
+            raise SanicCantGetUidFromTokenException("Can't get uid from token")
+
+        db_new_msg = message_queries.create_message(session, message=request_model, sender_id=uid)
 
         try:
             session.commit_session()
