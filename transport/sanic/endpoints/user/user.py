@@ -2,7 +2,7 @@ from sanic.request import Request
 from sanic.response import BaseHTTPResponse
 
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicDBException, SanicUserNotFound
+from transport.sanic.exceptions import SanicDBException, SanicUserNotFoundException
 
 from db.queries import user as user_queries
 from db.database import DBSession
@@ -39,11 +39,12 @@ class UserEndpoint(BaseEndpoint):
             return await self.make_response_json(status=400, message="Can't get uid from token")
 
         request_model = RequestPatchUserDto(body)
-        if uid == requested_user:
-            try:
-                db_user = user_queries.patch_user(session, request_model, uid=uid)
-            except DBUserNotExistsException:
-                raise SanicUserNotFound('User not found')
+        if uid != requested_user:
+            return await self.make_response_json(status=403, message="Insufficient permission")
+        try:
+            db_user = user_queries.patch_user(session, request_model, uid=uid)
+        except DBUserNotExistsException:
+            raise SanicUserNotFound('User not found')
 
         try:
             session.commit_session()

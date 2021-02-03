@@ -3,7 +3,7 @@ from sanic.response import BaseHTTPResponse
 
 from transport.sanic.endpoints import BaseEndpoint
 from transport.sanic.exceptions import SanicPasswordHashException, SanicDBException
-from transport.sanic.exceptions import SanicUserNotFound
+from transport.sanic.exceptions import SanicUserNotFoundException
 
 from db.database import DBSession
 from db.queries import user as user_queries
@@ -27,7 +27,7 @@ class AuthUserEndpoint(BaseEndpoint):
         try:
             db_user = user_queries.get_user(session, login=request_model.login)
         except DBUserNotExistsException:
-            raise SanicUserNotFound('User not found')
+            raise SanicUserNotFoundException('User not found')
         except (DBDataException, DBIntegrityException):
             raise SanicDBException('Database error')
 

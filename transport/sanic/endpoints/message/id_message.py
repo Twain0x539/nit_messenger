@@ -5,7 +5,7 @@ from api.request.message import RequestPatchMessageDto
 from api.response.message import ResponseGetMessageInfoDto
 
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicUserDontHaveAccessToMessage, SanicMessageDeletedException
+from transport.sanic.exceptions import SanicUserDontHaveAccessToMessageException, SanicMessageDeletedException
 from transport.sanic.exceptions import SanicDBException
 
 from db.database import DBSession
@@ -22,7 +22,7 @@ class IdentifiedMessageEndpoint(BaseEndpoint):
         try:
             db_message = message_queries.get_message_by_id(session, msgid=msgid, uid=token['uid'])
         except (DBNotYourMessageException, DBMessageNotExistsException):
-            raise SanicUserDontHaveAccessToMessage("You can't view that message")
+            raise SanicUserDontHaveAccessToMessageException("You can't view that message")
         except DBMessageDeletedException:
             raise SanicMessageDeletedException("This message was deleted!")
 
@@ -42,7 +42,7 @@ class IdentifiedMessageEndpoint(BaseEndpoint):
         try:
             db_message = message_queries.delete_message(session, msgid=msgid, uid=uid)
         except (DBNotYourMessageException, DBMessageNotExistsException) as e:
-            raise SanicUserDontHaveAccessToMessage("You can't view that message")
+            raise SanicUserDontHaveAccessToMessageException("You can't view that message")
         except DBMessageDeletedException:
             raise SanicMessageDeletedException("Message already deleted")
 
@@ -67,8 +67,8 @@ class IdentifiedMessageEndpoint(BaseEndpoint):
 
         try:
             db_patched_message = message_queries.patch_message(session, request_model, msgid=msgid, uid=uid)
-        except DBMessageDeletedException:
-            raise SanicMessageDeletedException("Required message is deleted")
+        except (DBNotYourMessageException, DBMessageNotExistsException) as e:
+            raise SanicUserDontHaveAccessToMessageException("You don't have access to this message")
 
         try:
             session.commit_session()

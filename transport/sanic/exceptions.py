@@ -25,15 +25,15 @@ class SanicAuthException(SanicException):
     status_code = 401
 
 
-class SanicUserNotFound(SanicException):
+class SanicUserNotFoundException(SanicException):
     status_code = 404
 
 
-class SanicCantGetUidFromToken(SanicException):
+class SanicCantGetUidFromTokenException(SanicException):
     status_code = 500
 
 
-class SanicUserDontHaveAccessToMessage(SanicException):
+class SanicUserDontHaveAccessToMessageException(SanicException):
     status_code = 403
 
 

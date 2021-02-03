@@ -55,7 +55,7 @@ class DBSession:
             raise DBDataException
 
     def get_user_messages(self, uid: int):
-        return self.messages().filter(DBMessage.recipient_id == uid)
+        return self.messages().filter(DBMessage.recipient_id == uid).filter(DBMessage.is_deleted == 0)
 
     def get_message_by_id(self, msgid: int):
         try:
