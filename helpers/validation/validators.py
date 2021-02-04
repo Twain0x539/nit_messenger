@@ -14,6 +14,6 @@ class PasswordValidator(Validator):
 
 
 class NameValidator(Validator):
-    regexp = r"[a-zA-Z0-9\-\s]*$"
+    regexp = r"[a-zA-Z\-\s]*$"
     length = 1
-    match_error = "Name must not contain special symbols"
+    match_error = "Name must not contain special symbols and numbers"
